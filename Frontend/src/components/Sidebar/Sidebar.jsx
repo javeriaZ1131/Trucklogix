@@ -1,34 +1,13 @@
-<<<<<<< HEAD
-const Sidebar = () => {
+import "./Sidebar.css"
+export default function Sidebar() {
 return (
 <div className="sidebar">
-  <h2 className="logo">TruckLogix</h2>
-  <div className="menu">
-    <p>Dashboard</p>
-    <p>NewTrips</p>
-    <p>My Trips</p>
-        <p>Logs</p>
-            <p>Settings</p>
-
-
-  </div>
+<h2 className="logo">TruckLogix</h2>
+<div className="menu">
+<p>Dashboard</p>
+<p>Trips</p>
+<p>Logs</p>
 </div>
-);
-=======
-const Sidebar = () => {
-return (
-<div className="sidebar">
-  <h2 className="logo">TruckLogix</h2>
-  <div className="menu">
-    <p>Dashboard</p>
-    <p>NewTrips</p>
-    <p>My Trips</p>
-        <p>Logs</p>
-            <p>Settings</p>
-
-
-  </div>
 </div>
-);
->>>>>>> cb77817fd01b635948cd03e4e87e49b5a7055f8e
+)
 }
