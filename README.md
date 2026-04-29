@@ -1,2 +1,0 @@
-# Trucklogix
-ELD Trip Planner
