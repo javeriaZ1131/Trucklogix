@@ -1,0 +1,18 @@
+.sidebar {
+width: 260px;
+height: 100vh;
+background: #111827;
+color: white;
+padding: 20px;
+}
+.logo {
+font-size: 20px;
+margin-bottom: 30px;
+}
+.menu p {
+padding: 12px;
+border-radius: 8px;
+}
+.menu p:hover {
+background: #1f2937;
+}
