@@ -1,0 +1,13 @@
+body {
+margin: 0;
+font-family: Inter, sans-serif;
+background: #f4f6f9;
+color: #111827;
+}
+* {
+box-sizing: border-box;
+}
+button {
+cursor: pointer;
+border: none;
+}
