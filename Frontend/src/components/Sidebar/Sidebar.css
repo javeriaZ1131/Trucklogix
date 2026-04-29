@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .sidebar {
 width: 260px;
 height: 100vh;
@@ -16,3 +17,23 @@ border-radius: 8px;
 .menu p:hover {
 background: #1f2937;
 }
+=======
+.sidebar {
+width: 260px;
+height: 100vh;
+background: #111827;
+color: white;
+padding: 20px;
+}
+.logo {
+font-size: 20px;
+margin-bottom: 30px;
+}
+.menu p {
+padding: 12px;
+border-radius: 8px;
+}
+.menu p:hover {
+background: #1f2937;
+}
+>>>>>>> cb77817fd01b635948cd03e4e87e49b5a7055f8e
