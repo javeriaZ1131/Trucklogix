@@ -16,3 +16,8 @@ cursor: pointer;
 .sidebar li:hover {
 background: #3e78c9;
 }
+.sidebar .heading {
+font-size: 24px;
+margin-bottom: 20px;
+font-weight: bold;
+}
