@@ -1,13 +1,17 @@
-import "./Sidebar.css"
-export default function Sidebar() {
+import './Sidebar.css'
+const Sidebar = () => {
 return (
 <div className="sidebar">
-<h2 className="logo">TruckLogix</h2>
-<div className="menu">
-<p>Dashboard</p>
-<p>Trips</p>
-<p>Logs</p>
-</div>
+<h2>TruckLogic</h2>
+<h3>ELD Trip Planner Log</h3>
+<ul>
+<li>Dashboard</li>
+<li>My Trips</li>
+<li>New Trips</li>
+<li>ELD Logs</li>
+<li>Logs</li>
+</ul>
 </div>
 )
 }
+export default Sidebar
