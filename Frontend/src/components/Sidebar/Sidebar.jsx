@@ -8,6 +8,7 @@ return (
 <li>Dashboard</li>
 <li>Trips</li>
 <li>Logs</li>
+<li>Logs</li>
 </ul>
 </div>
 )
