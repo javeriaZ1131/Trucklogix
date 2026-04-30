@@ -1,18 +1,18 @@
 .sidebar {
-width: 260px;
+width: 240px;
 height: 100vh;
 background: #111827;
 color: white;
 padding: 20px;
 }
-.logo {
-font-size: 20px;
-margin-bottom: 30px;
+.sidebar ul {
+list-style: none;
+padding: 0;
 }
-.menu p {
-padding: 12px;
-border-radius: 8px;
+.sidebar li {
+padding: 10px;
+cursor: pointer;
 }
-.menu p:hover {
-background: #1f2937;
+.sidebar li:hover {
+background: #3e78c9;
 }

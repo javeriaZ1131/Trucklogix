@@ -6,8 +6,9 @@ return (
 <h3>ELD Trip Planner Log</h3>
 <ul>
 <li>Dashboard</li>
-<li>Trips</li>
-<li>Logs</li>
+<li>My Trips</li>
+<li>New Trips</li>
+<li>ELD Logs</li>
 <li>Logs</li>
 </ul>
 </div>
