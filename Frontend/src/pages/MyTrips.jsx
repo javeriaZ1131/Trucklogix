@@ -55,6 +55,16 @@ export default function MyTrips() {
         </div>
 
         <div className="overflow-x-auto">
+        {loading ? (
+          <div className="p-6 text-center text-gray-500">
+            Loading trips...
+            </div>
+        ) : trips.length === 0 ? (
+            <div className="p-6 text-center text-gray-500">
+                No trips found. Click "Plan New Trip" to get started.
+            </div>
+        ) : (
+
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 dark:border-gray-700">
@@ -112,7 +122,9 @@ export default function MyTrips() {
               ))}
             </tbody>
           </table>
+        )}
         </div>
+
       </div>
     </div>
   )

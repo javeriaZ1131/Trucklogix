@@ -4,11 +4,11 @@ import {
   FileText, ChevronLeft, ChevronRight,
   CheckCircle2, ArrowRight
 } from 'lucide-react'
-import { STATIC_TRIPS, STATUS_COLORS } from '../data/staticData'
+import { STATUS_COLORS } from '../data/staticData'
+import { fetchTrips } from '../api/tripService'
 
-/* ─────────────────────────────────────────
-   Canvas ELD renderer
-───────────────────────────────────────── */
+// ELD renderer
+
 const ROW_H    = 42
 const HEADER_H = 38
 const LEFT_W   = 110
@@ -105,6 +105,7 @@ function drawGrid(canvas, timeline) {
 function ELDCanvas({ timeline }) {
   const ref = useRef(null)
   useEffect(() => { drawGrid(ref.current, timeline) }, [timeline])
+ 
   return (
     <canvas
       ref={ref}
@@ -116,9 +117,9 @@ function ELDCanvas({ timeline }) {
   )
 }
 
-/* ─────────────────────────────────────────
-   HOS compliance progress bar
-───────────────────────────────────────── */
+
+//   HOS compliance progress bar
+
 function HosBar({ label, value, limit, colorClass }) {
   const pct = Math.min((value / limit) * 100, 100)
   const ok  = value <= limit
@@ -140,23 +141,47 @@ function HosBar({ label, value, limit, colorClass }) {
   )
 }
 
-/* ─────────────────────────────────────────
-   Main component
-───────────────────────────────────────── */
+
+//   Main component
+
 const toH = (s) => { const [h, m] = s.split(':').map(Number); return h + m / 60 }
 const STATUS_MAP = { 'Off Duty': 0, 'Sleeper Berth': 1, 'Driving': 2, 'On Duty (Not Driving)': 3 }
 
 export default function Logs() {
   const navigate = useNavigate()
-  const [selectedId, setSelectedId] = useState(STATIC_TRIPS[0].id)
+  const [selectedId, setSelectedId] = useState(null)
   const [dayIdx, setDayIdx]         = useState(0)
+  const [trips, setTrips] = useState([])
+const [loading, setLoading] = useState(true)
 
-  const trip = STATIC_TRIPS.find(t => t.id === selectedId)
-  const log  = trip.eldLogs[dayIdx]
+useEffect(() => {
+  fetchTrips()
+    .then(res => setTrips(res.data))
+    .catch(() => setTrips([]))
+}, [])
 
-  const driveH = toH(log.drivingTime)
-  const dutyH  = toH(log.totalOnDuty)
-  const availH = toH(log.availableTomorrow)
+useEffect(() => {
+  if (trips.length && !selectedId) {
+    setSelectedId(trips[0].id)
+  }
+}, [trips])
+ 
+const trip = trips?.find(t => t.id === selectedId)
+const log = trip?.eldLogs?.[dayIdx] ||null
+
+if (!trips.length) {
+  return (
+    <div className="p-6 flex items-center justify-center min-h-[60vh]">
+      <p className="text-gray-500">No logs found</p>
+    </div>
+  )
+}
+//   const driveH = toH(log.drivingTime)
+//   const dutyH  = toH(log.totalOnDuty)
+//   const availH = toH(log.availableTomorrow)
+const driveH = log?.drivingTime ? toH(log.drivingTime) : 0
+const dutyH  = log?.totalOnDuty ? toH(log.totalOnDuty) : 0
+const availH = log?.availableTomorrow ? toH(log.availableTomorrow) : 0
 
   const handleTripSelect = (id) => {
     setSelectedId(id)
@@ -188,7 +213,7 @@ export default function Logs() {
             Select Trip
           </p>
           <div className="space-y-2">
-            {[...STATIC_TRIPS].reverse().map(t => {
+            {[...(trips || [])].reverse().map(t => {
               const active = t.id === selectedId
               return (
                 <button
