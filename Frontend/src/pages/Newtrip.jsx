@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Navigation, Info, CheckCircle } from 'lucide-react'
-import { STATIC_TRIPS } from '../data/staticData'
+//import { STATIC_TRIPS } from '../data/staticData'
+import { planTrip } from '../api/tripService'
 
+  
 const ASSUMPTIONS = [
   { label: 'Cycle Rule',       value: '70hr / 8-day' },
   { label: 'Driving Limit',    value: '11hr per shift' },
@@ -30,16 +32,35 @@ export default function NewTrip() {
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setLoading(true)
-    // Simulate API call — navigate to first trip as demo
-    setTimeout(() => {
-      setLoading(false)
-      navigate('/trips/1')
-    }, 1800)
-  }
+ const handleSubmit=async (form) => {
+    form.preventDefault()   
+    setLoading(true)   
+    
+    try {
+    const response = await planTrip(form)    
+    console.log('Trip planned successfully:', response.data)
+    const res=await planTrip({
+        currentLocation:form.currentLocation,
+        pickupLocation: form.pickupLocation,  
+        dropoffLocation: form.dropoffLocation,
+        cycleUsed: form.cycleUsed,
+        driverName: form.driverName,
+        carrierName: form.carrierName,
+        truckNumber: form.truckNumber, 
+        trailerNumber: form.trailerNumber,
+    })
+    console.log('Trip planned successfully:', res.data)
+    navigate(`/trips/${res.data.id}`)
+    // You can navigate to the trip overview page or show a success message here
+  } 
+  catch (error) {
+    alert(error.response?.data?.error || 'Planning failed. Check locations.')
 
+    // Handle error (e.g., show an error message to the user)
+  } finally {
+    setLoading(false)
+  }       
+}
   const filled = form.currentLocation && form.pickupLocation && form.dropoffLocation
 
   return (

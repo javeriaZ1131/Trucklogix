@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, PlusCircle, MapPin, FileText,
-  Settings, Truck, Menu, X, Moon, Sun
+  Settings, HelpCircle, Truck, Menu, X, Moon, Sun
 } from 'lucide-react'
 import { DRIVER } from '../data/staticData'
 

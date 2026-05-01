@@ -22,3 +22,48 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# envirnment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# FRONTEND (React / Vite)
+
+frontend/node_modules
+frontend/dist
+
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+db.sqlite3
+*.env
+
+#backend
+backend/node_modules/
+backend/dist/
+#Python virtual environment
+backend/venv/
+#Package-lock and yarn lock files
+backend/package-lock.json
+backend/yarn.lock
+
+#package Manager files
+package-lock.json
+yarn.lock
+#Python build files
+build/
+dist/
+*.egg-info/
+#IDE files
+.vscode/
+.idea/
+
+#TEMP Files
+*.tmp
+*.temp
+

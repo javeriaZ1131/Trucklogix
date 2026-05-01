@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { PlusCircle, Eye, Trash2, MapPin } from 'lucide-react'
-import { STATIC_TRIPS } from '../data/staticData'
+//import { STATIC_TRIPS } from '../data/staticData'
+import {useState, useEffect} from 'react' 
+import {fetchTrips,deleteTrip} from '../api/tripService'
 
 const statuses = {
   Planned:   'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
@@ -10,8 +12,26 @@ const statuses = {
 
 export default function MyTrips() {
   const navigate = useNavigate()
-  const trips = [...STATIC_TRIPS].reverse()
+  const [trips, setTrips] = useState([])    
+    const [loading, setLoading] = useState(true)
 
+    useEffect(() => {   
+        fetchTrips()
+            .then(res => setTrips(res.data))
+            .catch(()=>setTrips([]))
+            .finally(() => setLoading(false))
+
+    }, [])
+
+    const handleDelete = (id,e) => {
+        e.stopPropagation()
+        
+        if (window.confirm('Are you sure you want to delete this trip?')) {
+            deleteTrip(id)
+                .then(() => setTrips(trips.filter(t => t.id !== id)))
+                .catch(err => console.error('Error deleting trip:', err))
+        }
+    } 
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
@@ -80,6 +100,7 @@ export default function MyTrips() {
                         <Eye size={15} />
                       </button>
                       <button
+                        onClick={(e) => handleDelete(trip.id, e)}
                         className="p-1.5 text-gray-400 hover:text-red-500 transition-colors rounded border border-gray-200 dark:border-gray-600"
                         title="Delete"
                       >

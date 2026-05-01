@@ -4,6 +4,7 @@ import { ArrowLeft, Map, FileText, List, Ruler, Clock, ChevronDown, ChevronUp } 
 import { STATIC_TRIPS, STOP_COLORS } from '../data/staticData'
 import RouteMap from '../components/RouteMap'
 import ELDLogSheet from '../components/ELDLogSheet'
+import { fetchTrip } from '../api/tripService'
 
 const TABS = [
   { key: 'route',    label: 'Route & Stops', icon: Map },
@@ -23,8 +24,24 @@ export default function TripDetail() {
   const [tab, setTab] = useState('route')
   const [mapLoaded, setMapLoaded] = useState(false)
   const [expandedDay, setExpandedDay] = useState(null)
+  const [trip, setTrip] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [result, setResult] = useState(null)
 
-  const trip = STATIC_TRIPS.find(t => t.id === Number(id))
+  useEffect(() => { 
+    fetchTrip(id)
+      .then(res => {
+        setTrip(res.data.trip)
+        setResult(res.data.result)
+      })
+      .catch(() =>{ navigate('/trips')})
+
+      .finally(() => setLoading(false))
+  }, [id])     
+
+    
+
+  //const trip = STATIC_TRIPS.find(t => t.id === Number(id))
 
   // Leaflet CSS + JS
   useEffect(() => {
@@ -41,9 +58,11 @@ export default function TripDetail() {
       script.onload = () => setMapLoaded(true)
       document.body.appendChild(script)
     } else {
-      setMapLoaded(true)
-    }
+        Promise.resolve().then(() => {
+        setMapLoaded(true)
+      })    }
   }, [])
+
 
   if (!trip) {
     return (
@@ -52,6 +71,13 @@ export default function TripDetail() {
         <button onClick={() => navigate('/trips')} className="mt-3 text-blue-600 hover:underline text-sm">
           ← Back to My Trips
         </button>
+      </div>
+    )
+  }
+   if (loading || !trip || !result) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-gray-500">Loading trip...</p>
       </div>
     )
   }
@@ -133,7 +159,7 @@ export default function TripDetail() {
           {/* Map */}
           <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden" style={{ minHeight: 380 }}>
             {mapLoaded ? (
-              <RouteMap trip={trip} />
+              <RouteMap trip={{ ...trip, routeCoords: result?.routeCoords }} />
             ) : (
               <div className="flex items-center justify-center h-full min-h-[320px] text-gray-400 dark:text-gray-600 text-sm">
                 Loading map...
@@ -147,13 +173,13 @@ export default function TripDetail() {
             <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">Scheduled points along the route.</p>
 
             <div className="space-y-4">
-              {trip.stops_summary.map((stop, i) => {
+              {result?.stopsSummary?.map((stop, i) => {
                 const col = STOP_COLORS[stop.type]
                 return (
                   <div key={i} className="flex gap-3">
                     <div className="flex flex-col items-center">
                       <div className="w-3 h-3 rounded-full shrink-0 mt-0.5" style={{ background: col.dot }} />
-                      {i < trip.stops_summary.length - 1 && (
+                      {i < result.stopsSummary.length - 1 && (
                         <div className="w-px flex-1 bg-gray-200 dark:bg-gray-700 mt-1 mb-0" style={{ minHeight: 20 }} />
                       )}
                     </div>
@@ -195,10 +221,10 @@ export default function TripDetail() {
         <div className="space-y-5">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {trip.eldLogs.length} day{trip.eldLogs.length > 1 ? 's' : ''} of ELD logs — FMCSA compliant
+              {result?.eldLogs.length} day{result?.eldLogs.length > 1 ? 's' : ''} of ELD logs — FMCSA compliant
             </p>
           </div>
-          {trip.eldLogs.map(log => (
+          {result?.eldLogs?.map(log => (
             <ELDLogSheet key={log.day} log={log} trip={trip} />
           ))}
         </div>
@@ -207,7 +233,7 @@ export default function TripDetail() {
       {/* Instructions Tab */}
       {tab === 'instructions' && (
         <div className="space-y-3">
-          {trip.eldLogs.map((log, di) => {
+          {result?.eldLogs?.map((log, di) => {
             const isOpen = expandedDay === di
             return (
               <div key={di} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
