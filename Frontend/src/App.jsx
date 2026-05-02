@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
-import NewTrip from './pages/NewTrip'
+import NewTrip from './pages/NewTrip.jsx'
 import MyTrips from './pages/MyTrips'
 import TripDetail from './pages/TripDetail'
 import Logs from './pages/Logs'
