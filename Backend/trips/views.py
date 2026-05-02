@@ -4,8 +4,8 @@ from rest_framework import status
 from .models import Trip
 from .serializers import TripSerializer, TripPlanRequestSerializer
 from .hos_engine import plan_trip
-
-
+import requests
+from datetime import date, timedelta
 class PlanTripView(APIView):
     """POST /api/plan-trip/ — geocode, calculate HOS, save and return full result."""
 
@@ -22,6 +22,9 @@ class PlanTripView(APIView):
                 d['dropoffLocation'],
                 d['cycleUsed'],
             )
+            trip_date = date.today()
+            for i, log in enumerate(result['eldLogs']):
+                log['date'] = (trip_date + timedelta(days=i)).isoformat()
         except ValueError as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -73,3 +76,37 @@ class TripDetailView(APIView):
         except Trip.DoesNotExist:
             return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class LocationSearchView(APIView):
+    def get(self, request):
+        query = request.GET.get("q")
+
+        if not query:
+            return Response(
+                {"error": "Query parameter 'q' is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            url = "https://nominatim.openstreetmap.org/search"
+
+            headers = {
+                "User-Agent": "Trucklogix/1.0 javeriazulfiqar490@gmail.com"
+            }
+
+            params = {
+                "format": "json",
+                "q": query,
+                "limit": 5
+            }
+
+            res = requests.get(url, headers=headers, params=params)
+            data = res.json()
+
+            return Response(data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

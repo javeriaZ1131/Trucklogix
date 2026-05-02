@@ -29,11 +29,13 @@ export default function RouteMap({ trip }) {
 
     // Draw polyline
     L.polyline(coords, { color: '#3b82f6', weight: 3, opacity: 0.85 }).addTo(map)
-
+console.log('stops:', JSON.stringify(stops, null, 2))
     // Add markers
-    stops.forEach((stop, i) => {
+    stops.forEach((stop) => {
       const color = STOP_COLORS[stop.type]?.dot || '#6b7280'
-      const coord = coords[Math.min(i, coords.length - 1)]
+      const [lat, lng] = stop.coords ?? []
+if (lat == null || lng == null) return
+     // const coord = coords[Math.min(i, coords.length - 1)]
 
       const icon = L.divIcon({
         className: '',
@@ -45,8 +47,8 @@ export default function RouteMap({ trip }) {
         iconSize: [14, 14],
         iconAnchor: [7, 7],
       })
-
-      L.marker(coord, { icon })
+      
+      L.marker([lat, lng], { icon })
         .addTo(map)
         .bindPopup(`<b>${stop.label}</b><br>${stop.location}<br><small>${stop.miles} mi from start</small>`)
     })

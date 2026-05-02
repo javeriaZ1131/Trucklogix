@@ -30,7 +30,7 @@ def geocode_location(location: str):
     import urllib.request, urllib.parse, json, time
     query = urllib.parse.urlencode({'q': location, 'format': 'json', 'limit': 1})
     url   = f"https://nominatim.openstreetmap.org/search?{query}"
-    req   = urllib.request.Request(url, headers={'User-Agent': 'TruckLogix/1.0'})
+    req   = urllib.request.Request(url, headers={'User-Agent': 'TruckLogix/1.0 javeriazulfiqar490@gmail.com'})
     with urllib.request.urlopen(req, timeout=8) as r:
         data = json.loads(r.read())
     if not data:
